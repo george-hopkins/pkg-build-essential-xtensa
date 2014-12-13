@@ -1,0 +1,12 @@
+
+Package: crossbuild-essential-xtensa-@XTENSA_PLATFORM@
+Architecture: all
+Depends: ${cross-essential}, ${misc:Depends}
+Description: Informational list of cross-build-essential packages
+ This package contains an informational list of packages which are
+ considered essential for cross building for Xtensa @XTENSA_PLATFORM_HUMAN@
+ architecture.
+ .
+ If you have this package installed, you only need to install whatever
+ a project specifies as its build-time dependencies to cross build the
+ project.

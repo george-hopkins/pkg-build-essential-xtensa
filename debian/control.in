@@ -1,0 +1,6 @@
+Source: build-essential-xtensa
+Section: devel
+Priority: optional
+Maintainer: George Hopkins <george-hopkins@null.net>
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9.0), python3:any, dh-autoreconf

@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+xtensa_platforms := $(shell grep -v '^\#' debian/xtensa-platforms)
+
+%:
+	dh $@
+
+debian/control: debian/control.in debian/control.cross debian/xtensa-platforms
+	cat debian/control.in > $@
+	for xp in $(xtensa_platforms); do \
+	  sed -e "s/@XTENSA_PLATFORM@/$$xp/g;s/@XTENSA_PLATFORM_HUMAN@/$$(echo $$xp | tr a-z A-Z)/g" \
+	    debian/control.cross >> $@; \
+	done
+
+override_dh_auto_build:
+	set -e; \
+	for xp in $(xtensa_platforms); do \
+	  p=crossbuild-essential-xtensa-$$xp; \
+	  sed -e "s/@XTENSA_PLATFORM@/$$xp/g;s/@XTENSA_PLATFORM_HUMAN@/$$(echo $$xp | tr a-z A-Z)/g" \
+	    list.cross > list.$$p; \
+	done
+	dh_auto_build
+
+override_dh_auto_install:
+	set -e; \
+	for xp in $(xtensa_platforms); do \
+	  p=crossbuild-essential-xtensa-$$xp; \
+	  printf > debian/$$p.substvars "cross-essential=%s\n" \
+	    "`./list2depends xtensa-$$xp < list.$$p`"; \
+	  install -d debian/$$p/usr/share/$$p debian/$$p/usr/share/doc/$$p; \
+	  install -m 644 list.$$p debian/$$p/usr/share/$$p/list; \
+	  ln -sf ../../$$p/list debian/$$p/usr/share/doc/$$p; \
+	done
+	dh_auto_install
+
+override_dh_clean:
+	for f in list.*; do \
+	  case $$f in list|list.cross) continue; esac; \
+	  rm -f $$f; \
+	done
+	dh_clean

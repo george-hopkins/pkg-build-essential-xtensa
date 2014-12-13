@@ -1,0 +1,5 @@
+build-essential-xtensa (1.0) UNRELEASED; urgency=low
+
+  * Initial release based on crossbuild-essential-arm64
+
+ -- George Hopkins <george-hopkins@null.net>  Sat, 13 Dec 2014 23:01:42 +0100
